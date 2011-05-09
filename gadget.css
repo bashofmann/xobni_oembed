@@ -1,0 +1,28 @@
+#embed img {
+    width: 80px;
+    float: left;
+}
+
+#embed h3 {
+    color: black; 
+    font: bold 11px/18px Tahoma; 
+}
+
+#embed p {
+    color: black; 
+    font: 11px/18px Tahoma;  
+}
+
+#embed i {
+    color: gray;
+    font: 11px/18px Tahoma;
+}
+
+table {
+    width: 100%;
+}
+
+img.nav {
+    width: 20px;
+    border: 0;
+}

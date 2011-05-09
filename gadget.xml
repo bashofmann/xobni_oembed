@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<Module> 
+  <ModulePrefs title="Link Preview"
+    description="This gadget tries to show previews of Links either through OEmbed or OpenGraph"
+    author="Bastian Hofmann"
+    author_email="bashofmann@googlemail.com"
+    author_location="Berlin, Germany"
+    height="60"
+    author_affiliation="">
+    <Require feature="dynamic-height"/> 
+    <Require feature="setprefs"/> 
+    <Require feature="google.contentmatch"> 
+      <Param name="extractors"> 
+        google.com:HttpLinkExtractor
+      </Param> 
+    </Require> 
+    <Require feature="opensocial-0.9" />
+  </ModulePrefs> 
+ 
+ <UserPref
+    name="minimized"
+    default_value="1"
+    datatype="hidden"/> 
+    
+ 
+  <Content type="html" view="card"> 
+    <![CDATA[
+    <link rel="stylesheet" type="text/css" href="file://Z:\xobni_oembed\gadget.css" />
+    <table>
+        <tr>
+            <td><a href="javascript:;" id="prev"><img src="file://Z:\xobni_oembed\previous.png" class="nav" /></a></td>
+            <td><div id="embed"></div></td>
+            <td><a href="javascript:;" id="next"><img src="file://Z:\xobni_oembed\next.png" class="nav" /></a></td>
+        </tr>
+    </table>
+    <script type="text/javascript" charset="utf-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+    <script type="text/javascript" charset="utf-8" src="file://Z:\xobni_oembed\mustache.js"></script> 
+    <script type="text/javascript" charset="utf-8" src="file://Z:\xobni_oembed\oembed.js"></script> 
+    ]]>
+  </Content> 
+</Module>

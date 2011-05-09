@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009"> 
+    <Name>Link Preview</Name> 
+    <Description></Description> 
+ 
+    <Extension id="XobniOEmbedBodyEmailExtractor" type="contextExtractor"> 
+        <Url>google.com:HttpLinkExtractor</Url> 
+        <Param name="url" value=".*"/> 
+        <Triggers ref="XobniOEmbedGadget"/> 
+        <Container name="mail"/> 
+        <Scope ref="emailBody"/> 
+    </Extension> 
+
+    <Extension id="XobniOEmbedGadget" type="gadget"> 
+        <Url>gadget.xml</Url> 
+        <Container name="mail"/> 
+    </Extension> 
+    
+    <Scope id="emailBody"> 
+      <Url>tag:google.com,2010:auth/contextual/extractor/BODY</Url> 
+      <Reason>This application looks for urls in the body and if it finds one, attempts to show a preview of .</Reason> 
+    </Scope> 
+ 
+</ApplicationManifest>
