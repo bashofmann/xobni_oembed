@@ -15,6 +15,7 @@
       </Param> 
     </Require> 
     <Require feature="opensocial-0.9" />
+    <Icon>file://Z:\xobni_oembed\icon.png</Icon>
   </ModulePrefs> 
  
  <UserPref
