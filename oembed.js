@@ -1,5 +1,6 @@
 var embeds = [];
 var currentEmbed = 0;
+var responses = [];
 
 var embedTemplate='\
 <img src="{{{thumbnail_url}}}" />\
@@ -12,6 +13,7 @@ var errorTemplate='<h3>{{error_message}}</h3>';
 function gadgetRun() {
     if (typeof google.contentmatch !== "undefined") {
         var matches = google.contentmatch.getContentMatches();
+        gadgets.log(gadgets.json.stringify(matches));
         if (matches && matches.length) {
           for(var i = 0; i < matches.length; i++) {
             embeds.push(matches[i].url);
@@ -43,6 +45,10 @@ function showLoadingAnimation() {
 }
 
 function loadEmbed(i) {
+  if (responses[i]) {
+      render(i);
+      return;
+  }
   showLoadingAnimation();
   $.ajax({
     url: 'http://api.embed.ly/1/oembed?maxwidth=200&maxheight=200&format=json&url=' + encodeURIComponent(embeds[i]),
@@ -55,8 +61,8 @@ function loadEmbed(i) {
             response.original_url = embeds[i];
             response.thumbnail_url = encodeURI(response.thumbnail_url);
             response.description = response.description.substr(0, 100);
-            $('#embed').html(Mustache.to_html(embedTemplate, response));
-            gadgets.window.adjustHeight();
+            responses[i] = response;
+            render(i);
         }
     },
     error: function(response) {
@@ -65,6 +71,7 @@ function loadEmbed(i) {
   });
 }
 
+var notFoundTemplate = '<p>No preview available for <a href="{{url}}" target="_blank">{{short_url}}</a></p>';
 function loadOpenGraph(i) {
     var url = embeds[i];
     var params = {}; 
@@ -72,9 +79,10 @@ function loadOpenGraph(i) {
     gadgets.io.makeRequest(url, function(response) {
         if (response.errors.length > 0) {
             gadgets.log(gadgets.json.stringify(response.errors));
-            $('#embed').html("Error loading preview");
+            $('#embed').html(Mustache.to_html(notFoundTemplate, {url: url, short_url: url.substr(0,50) + '...'}));
             return;
         }
+        gadgets.log(gadgets.json.stringify(response));
         var title = response.text.match(/<meta\s*property="og:title\"\s*content="(.*?)"/i);
         var description = response.text.match(/<meta\s*name="description\"\s*content="(.*?)"/i);
         var thumbnail_url = response.text.match(/<meta\s*property="og:image\"\s*content="(.*?)"/i);
@@ -91,15 +99,17 @@ function loadOpenGraph(i) {
         if (thumbnail_url) {
             meta.thumbnail_url = encodeURI(thumbnail_url[1]);
         }
-        gadgets.log(gadgets.json.stringify(description));
         if (provider_name) {
             meta.provider_name = provider_name[1];
         }
-            
-        $('#embed').html(Mustache.to_html(embedTemplate, meta));
-        gadgets.window.adjustHeight();
-        
+        responses[i] = meta;
+        render(i);
     }, params);
+}
+
+function render(i) {
+    $('#embed').html(Mustache.to_html(embedTemplate, responses[i]));
+    gadgets.window.adjustHeight();
 }
 
 if (typeof gadgets !== 'undefined' && gadgets.util && gadgets.util.registerOnLoadHandler) {
